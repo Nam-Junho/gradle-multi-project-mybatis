@@ -1,0 +1,100 @@
+buildscript {
+    ext {
+        springBootVersion = '2.3.3.RELEASE'
+        springDependencyManagement = '1.0.10.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:${springDependencyManagement}"
+    }
+}
+
+subprojects {
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java'
+
+    group = 'com.juno'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '11'
+
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+
+    // 서브 모듈에 공통으로 의존성을 추가 시킬 디펜던시를 정의합니다.
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+
+        compile 'com.github.kingbbode:spring-boot-custom-yaml-importer:0.1.0'
+
+        annotationProcessor 'org.projectlombok:lombok'
+
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+    }
+
+    // 해당 task로 서브 모듈 추가시 기초적인 디렉토리를 자동으로 생성해줍니다.
+    task initSourceFolders {
+        sourceSets*.java.srcDirs*.each {
+            if (!it.exists()) {
+                it.mkdirs()
+            }
+        }
+
+        sourceSets*.resources.srcDirs*.each {
+            if (!it.exists()) {
+                it.mkdirs()
+            }
+        }
+    }
+}
+
+project(':juno-common') {
+    bootJar {
+        enabled = false
+    }
+
+    jar {
+        enabled = true
+    }
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+        implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.3'
+        runtimeOnly 'mysql:mysql-connector-java'
+    }
+}
+
+project(':juno-catcher') {
+    dependencies {
+        implementation project(':juno-common')
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-webflux'
+        testImplementation 'io.projectreactor:reactor-test'
+        testImplementation 'org.springframework.restdocs:spring-restdocs-webtestclient'
+    }
+}
+
+project(':juno-batch') {
+    dependencies {
+        implementation project(':juno-common')
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-batch'
+        testImplementation 'org.springframework.batch:spring-batch-test'
+    }
+}
+
+project(':juno-web') {
+    dependencies {
+        implementation project(':juno-common')
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+        implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    }
+}

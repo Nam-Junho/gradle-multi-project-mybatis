@@ -1,0 +1,3 @@
+rootProject.name = 'gradle-multi-project-mybatis'
+
+include 'juno-common', 'juno-catcher', 'juno-batch', 'juno-web'

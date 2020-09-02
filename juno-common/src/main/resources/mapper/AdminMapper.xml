@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.AdminMapper">
+
+    <resultMap id="adminResult" type="com.dto.Admin">
+        <id property="id"                           column="id"/>
+        <result property="account"                  column="account"/>
+        <result property="name"                     column="name" />
+        <result property="role"                     column="role" />
+        <result property="corporationCode"          column="corp_code" />
+        <result property="corporation"              column="corporation" />
+        <result property="department"               column="department" />
+        <result property="loginFailureCount"        column="login_failure_count" />
+        <result property="latestFailureDateTime"    column="latest_failure_datetime" />
+        <result property="latestLoginDateTime"      column="latest_login_datetime" />
+        <result property="enable"                   column="enable"                     javaType="java.lang.Boolean" />
+        <result property="fromDate"                 column="from_date" />
+        <result property="toDate"                   column="to_date" />
+        <result property="delete"                   column="delete"                     javaType="java.lang.Boolean" />
+    </resultMap>
+
+    <select id="select" resultMap="adminResult">
+        SELECT admin.ID
+             , admin.CORP_CODE
+             , admin.ACCOUNT
+             , admin.NAME
+             , admin.DEPARTMENT
+             , admin.LOGIN_FAILURE_COUNT
+             , admin.LATEST_FAILURE_DATETIME
+             , admin.LATEST_LOGIN_DATETIME
+             , admin.ENABLE
+             , admin.FROM_DATE
+             , admin.TO_DATE
+             , admin.PURPOSE
+             , admin.REGIST_DATETIME
+             , admin.REGIST_ACCOUNT
+             , admin.UPDATE_DATETIME
+             , admin.UPDATE_ACCOUNT
+         FROM ADMIN as admin
+    </select>
+
+</mapper>

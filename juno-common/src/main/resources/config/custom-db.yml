@@ -1,0 +1,43 @@
+spring:
+  profiles:
+    active: "local"
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/{database}?allowPublicKeyRetrieval=true&verifyServerCertificate=false&useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul
+    username: {username}
+    password: {password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      cachePrepStmts: true
+      prepStmtCacheSize: 250
+      prepStmtCacheSqlLimit: 2048
+      useServerPrepStmts: true
+      useLocalSessionState: true
+      rewriteBatchedStatements: true
+      cacheResultSetMetadata: true
+      cacheServerConfiguration: true
+      elideSetAutoCommits: true
+      maintainTimeStats: false
+
+mybatis:
+#  type-aliases-package: com.example.domain.model
+#  type-handlers-package: com.example.typehandler
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 30
+
+---
+## LOCAL
+spring:
+  profiles: local
+
+---
+## DEV
+spring:
+  profiles: dev
+
+---
+## PROD
+spring:
+  profiles: prod
